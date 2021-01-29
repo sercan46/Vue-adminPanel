@@ -2,9 +2,6 @@
   <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="text-center m-3">
       <h1 style="color: crimson">Dashboard</h1>
-      <div class="btn-group me-2">
-        <p>Veri Analizleri</p>
-      </div>
     </div>
     <hr />
     <div class="container">

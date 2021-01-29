@@ -1,9 +1,9 @@
 <template>
   <nav
     id="sidebarMenu"
-    class="col-md-3 col-lg-2 d-md-block bg-danger sidebar collapse"
+    class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse"
   >
-    <div class="position-sticky pt-3">
+    <div class="position-sticky pt-4">
       <ul class="nav flex-column">
         <router-link
           class="list-group-item mt-4 backColor"
@@ -79,10 +79,10 @@ li {
   box-shadow: 3px 3px black;
 }
 .backColor {
-  background-image: linear-gradient(to right, rgb(37, 90, 170), #8527aa);
+  background-image: linear-gradient(to right, #ce7070, #6684c5);
 }
 .activeBack {
-  background-image: linear-gradient(to right, #02d783, #02d783);
+  background-image: linear-gradient(to right, rgb(134, 24, 24), rgb(134, 24, 24));
 }
 @media screen and (max-width: 992px) {
   .sidebar {
