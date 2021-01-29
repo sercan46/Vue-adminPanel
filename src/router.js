@@ -3,10 +3,11 @@ import Vue from 'vue';
 import Product from './components/Products/Product'
 import Category from './components/Category/Category'
 import About from './components/About/About'
-import Admin from './components/Admin/Admin'
+import Dashboard from './components/Dashboard/Dashboard'
 import Autho from './components/Autho/Autho'
 import store from './store'
 import VueRouter from "vue-router"
+
 Vue.use(VueRouter)
 
 export const router = new VueRouter({
@@ -43,7 +44,7 @@ export const router = new VueRouter({
             }
         },
         {
-            path: '/admins', component: Admin, beforeEnter(to, from, next) {
+            path: '/dashboard', component: Dashboard, beforeEnter(to, from, next) {
                 if (store.getters.isAuthenticated) {
                     next()
                 }

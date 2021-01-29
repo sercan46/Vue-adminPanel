@@ -30,7 +30,6 @@ const store = new Vuex.Store({
 
             }
             else {
-                console.log('else girdi')
                 router.push("/auth")
                 return false
             }

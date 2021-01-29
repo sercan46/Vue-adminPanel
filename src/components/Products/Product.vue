@@ -77,11 +77,11 @@
                       <div class="text-center">
                         <img
                           height="150"
-                          width="150"
+                          width="250"
                           class="img-responsive text-center mb-3 ml-5"
                           :src="
                             product.image == null
-                              ? '../../src/assets/default.png'
+                              ? '../../src/assets/addproduct.png'
                               : product.image
                           "
                         />
@@ -95,8 +95,16 @@
                       </div>
                     </div>
                     <div class="error">
-                      <span v-if="!$v.product.image.required"
-                        >Resim Alanı Zorunludur.</span
+                      <span
+                        v-if="!$v.product.image.required"
+                        style="
+                          color: darkred;
+                          font-size: 12px;
+                          position: absolute;
+                          right: 2px;
+                          padding: 10px;
+                        "
+                        >Resim Zorunludur.</span
                       >
                     </div>
                     <div class="text-center">
@@ -114,7 +122,10 @@
                         class="form-control"
                         placeholder="Ürün Adı"
                         v-model="product.name"
-                        required
+                        :class="{
+                          'is-invalid': $v.product.name.$invalid,
+                          'is-valid': !$v.product.name.$invalid,
+                        }"
                       />
                     </div>
                     <div class="form-group">
@@ -137,16 +148,22 @@
                         class="form-control"
                         placeholder="Ürün Fiyatı"
                         v-model="product.price"
-                        required
+                        :class="{
+                          'is-invalid': $v.product.price.$invalid,
+                          'is-valid': !$v.product.price.$invalid,
+                        }"
                       />
                     </div>
                     <div class="form-group">
                       <input
                         type="number"
                         class="form-control"
-                        placeholder="Ürün Adeti"
+                        placeholder="Ürün Adet/Kilogram/Litre"
                         v-model="product.count"
-                        required
+                        :class="{
+                          'is-invalid': $v.product.count.$invalid,
+                          'is-valid': !$v.product.count.$invalid,
+                        }"
                       />
                     </div>
                     <div class="form-group">
@@ -159,11 +176,6 @@
                           'is-valid': !$v.product.description.$invalid,
                         }"
                       />
-                    </div>
-                    <div class="error">
-                      <span v-if="!$v.product.description.minLength"
-                        >Name must have at least letters.</span
-                      >
                     </div>
                   </form>
                 </div>
@@ -202,7 +214,7 @@
 <script>
 import ProductForm from "../Products/ProductForm";
 import ApiUrls from "../../mixin/ApiUrl";
-import { required, minLength, between } from "vuelidate/lib/validators";
+import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
   components: {
@@ -260,6 +272,16 @@ export default {
       image: {
         required,
       },
+      name: {
+        required,
+      },
+      price: {
+        required,
+      },
+      count: {
+        required,
+      },
+
       description: {
         required,
         minLength: minLength(4),
@@ -363,39 +385,47 @@ export default {
       this.titleButton = "Güncelle";
     },
     updateProduct(value) {
-      let updateProd = this.products.filter((val) => {
-        if (val.id == value.id) {
-          val.product.product.category = value.category;
-          val.product.product.count = value.count;
-          val.product.product.name = value.name;
-          val.product.product.price = value.price;
-          val.product.product.description = value.description;
-          val.product.product.image = value.image;
-          return val;
-        }
-      });
-
-      this.$http
-        .put(ApiUrls + "product/" + value.id + "/.json", {
-          product: updateProd[0].product.product,
-        })
-        .then(
-          (resp) => {
-            this.$toasted.show(`Ürün Güncellendi`, {
-              duration: 3000,
-              icon: "done_all",
-              type: "success",
-            });
-            $("#edit").modal("hide");
-          },
-          (err) => {
-            this.$toasted.show(`${err}!`, {
-              duration: 3000,
-              icon: "error_outline",
-              type: "error",
-            });
+      if (this.$v.product.$invalid) {
+        this.$toasted.show(`Alanları Doğru Giriniz`, {
+          duration: 3000,
+          icon: "error_outline",
+          type: "error",
+        });
+      } else {
+        let updateProd = this.products.filter((val) => {
+          if (val.id == value.id) {
+            val.product.product.category = value.category;
+            val.product.product.count = value.count;
+            val.product.product.name = value.name;
+            val.product.product.price = value.price;
+            val.product.product.description = value.description;
+            val.product.product.image = value.image;
+            return val;
           }
-        );
+        });
+
+        this.$http
+          .put(ApiUrls + "product/" + value.id + "/.json", {
+            product: updateProd[0].product.product,
+          })
+          .then(
+            (resp) => {
+              this.$toasted.show(`Ürün Güncellendi`, {
+                duration: 3000,
+                icon: "done_all",
+                type: "success",
+              });
+              $("#edit").modal("hide");
+            },
+            (err) => {
+              this.$toasted.show(`${err}!`, {
+                duration: 3000,
+                icon: "error_outline",
+                type: "error",
+              });
+            }
+          );
+      }
     },
     onChange(e) {
       const file = e.target.files[0];

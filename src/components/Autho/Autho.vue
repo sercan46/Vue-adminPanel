@@ -7,7 +7,7 @@
           <div class="container">
             <div class="row">
               <div class="col-lg-10 col-xl-7 mx-auto">
-                <h3 class="display-4">Admin Giriş</h3>
+                <h3 class="display-4">Yetkili Girişi</h3>
                 <p class="text-muted mb-4">Gerekli Bilgileri Giriniz</p>
                 <form>
                   <div class="form-group mb-3">
@@ -84,7 +84,7 @@ export default {
           });
         })
         .catch((err) => {
-          console.log("err.data.error.messag", err.data.error.message);
+          console.warn(err);
           let responseError = "";
           if (err.data.error.message == "MISSING_EMAIL") {
             responseError = "E-mail adresi giriniz";
@@ -117,7 +117,7 @@ export default {
   min-height: 100vh;
 }
 .bg-image {
-  background-image: url("https://res.cloudinary.com/mhmd/image/upload/v1555917661/art-colorful-contemporary-2047905_dxtao7.jpg");
+  background-image: url("../../assets/login.png");
   background-size: cover;
   background-position: center center;
 }

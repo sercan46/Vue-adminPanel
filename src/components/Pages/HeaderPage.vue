@@ -1,7 +1,7 @@
 <template>
   <div class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2"
-      ><img src="../../assets/company.png"
+    <a class="navbar-brand col-md-3 col-lg-2 text-center" style="background-color:black"
+      ><img src="../../assets/favicon.png" height="60" width="150"
     /></a>
     <button
       class="navbar-toggler position-absolute d-md-none collapsed"
@@ -31,3 +31,6 @@ export default {
   }
 }
 </script>
+<style scoped>
+ 
+</style>

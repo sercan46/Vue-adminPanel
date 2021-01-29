@@ -21,7 +21,6 @@ export default {
   },
   computed:{
       hide(){
-        console.log("this.$route.name",this.$route.path)
         return this.$route.path !=='/auth'
       }
   }

@@ -1,4 +1,5 @@
 <template>
+<div>
   <div class="table-responsive">
     <table
       :class="{
@@ -30,6 +31,12 @@
               width="80"
               class="img-responsive text-center mb-3 ml-5"
               :src="prod.product.product.image"
+               @click="
+                  imageShow(
+                    prod.product.product.image,
+                   prod.product.product.name
+                  )
+                "
             />
           </td>
 
@@ -86,6 +93,49 @@
       </tfoot>
     </table>
   </div>
+    <div
+      class="modal fade"
+      id="edit2"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="editLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  @click="hideImageDetail()"
+                >
+                  &times;
+                </button>
+                <h4 class="modal-title">{{ productName }}</h4>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <div class="text-center">
+                      <img
+                        height="250"
+                        width="250"
+                        class="img-responsive text-center mb-3 ml-5"
+                        :src="image"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 </template>
 <script>
 import ApiUrls from "../../mixin/ApiUrl";
@@ -96,6 +146,8 @@ export default {
       totalPrice: 0,
       totalCount: 0,
       maxTotalPrice: 0,
+      image: "",
+      productName: "",
     };
   },
   computed: {
@@ -164,7 +216,14 @@ export default {
       let val = (value / 1).toFixed(2).replace(".", ",");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     },
-
+  imageShow(image, productName) {
+      this.image = image;
+      this.productName = productName;
+      $("#edit2").modal("show");
+    },
+    hideImageDetail() {
+      $("#edit2").modal("hide");
+    },
   },
 };
 </script>

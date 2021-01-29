@@ -77,11 +77,11 @@
                       <div class="text-center">
                         <img
                           height="150"
-                          width="150"
+                          width="250"
                           class="img-responsive text-center mb-3 ml-5"
                           :src="
                             category.image == null
-                              ? '../../src/assets/default.png'
+                              ? '../../src/assets/addcategory.png'
                               : category.image
                           "
                         />
@@ -103,13 +103,21 @@
                         Resim Seç
                       </button>
                     </div>
+                        <div class="error">
+                      <span v-if="!$v.category.image.required"
+                       style="color:darkred;font-size:12px;position: absolute;right:2px" >Resim Zorunludur.</span
+                      >
+                    </div>
                     <div class="form-group">
                       <input
                         type="text"
                         class="form-control"
                         placeholder="Kategori Adı"
                         v-model="category.name"
-                        required
+                        :class="{
+                          'is-invalid': $v.category.name.$invalid,
+                          'is-valid': !$v.category.name.$invalid,
+                        }"
                       />
                     </div>
                     <div class="form-group">
@@ -117,6 +125,10 @@
                         class="form-control"
                         placeholder="Kategori Açıklaması"
                         v-model="category.description"
+                        :class="{
+                          'is-invalid': $v.category.description.$invalid,
+                          'is-valid': !$v.category.description.$invalid,
+                        }"
                       />
                     </div>
                   </form>
@@ -156,6 +168,7 @@
 <script>
 import CategoryForm from "../Category/CategoryForm";
 import ApiUrls from "../../mixin/ApiUrl";
+import { required } from "vuelidate/lib/validators";
 
 export default {
   components: {
@@ -199,6 +212,19 @@ export default {
       isLoading: false,
     };
   },
+  validations: {
+    category: {
+      name: {
+        required,
+      },
+      image: {
+        required,
+      },
+      description: {
+        required,
+      },
+    },
+  },
   methods: {
     //Popup göster
     showCategoryAdd() {
@@ -232,25 +258,33 @@ export default {
     },
     //Kategori ekle
     addCategory() {
-      this.$http
-        .post(ApiUrls + "category.json", { category: this.category })
-        .then((resp) => {
-          this.categories = [];
-          this.getCategory();
-          this.$toasted.show(`Kategori Eklendi`, {
-            duration: 3000,
-            icon: "done_all",
-            type: "success",
-          });
-          $("#edit").modal("hide");
-        })
-        .catch((err) => {
-          this.$toasted.show(`${err}!`, {
-            duration: 3000,
-            icon: "error_outline",
-            type: "error",
-          });
+      if (this.$v.category.$invalid) {
+        this.$toasted.show(`Alanları Doğru Giriniz`, {
+          duration: 3000,
+          icon: "error_outline",
+          type: "error",
         });
+      } else {
+        this.$http
+          .post(ApiUrls + "category.json", { category: this.category })
+          .then((resp) => {
+            this.categories = [];
+            this.getCategory();
+            this.$toasted.show(`Kategori Eklendi`, {
+              duration: 3000,
+              icon: "done_all",
+              type: "success",
+            });
+            $("#edit").modal("hide");
+          })
+          .catch((err) => {
+            this.$toasted.show(`${err}!`, {
+              duration: 3000,
+              icon: "error_outline",
+              type: "error",
+            });
+          });
+      }
     },
     //Seçilen satırın datasını popupa gönderme
     celldata(event) {
@@ -263,6 +297,13 @@ export default {
       this.titleButton = "Güncelle";
     },
     updateCategory(value) {
+         if (this.$v.category.$invalid) {
+        this.$toasted.show(`Alanları Doğru Giriniz`, {
+          duration: 3000,
+          icon: "error_outline",
+          type: "error",
+        });
+      } else {
       let updateCat = this.categories.filter((val) => {
         if (val.id == value.id) {
           val.category.category.name = value.name;
@@ -293,6 +334,7 @@ export default {
             });
           }
         );
+      }
     },
     onChange(e) {
       const file = e.target.files[0];
